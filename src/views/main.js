@@ -1,15 +1,41 @@
 /*eslint-disable*/
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import IndexNavbar from "../components/Navbars/IndexNavbar";
 import Footer from "../components/Footers/Footer";
+import { get } from "react-hook-form";
+import axios from "axios";
+import { getCookie } from "../utils/cookie";
 
 export default function Index() {
+  const [name, setName] = useState("");
   const instructionRef = useRef(null);
   const onInstructionClick = () => {
     instructionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    async function getMyInfo() {
+      const accessToken = getCookie("access_token");
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      await axios
+        .get("user")
+        .then(function (res) {
+          console.log(res);
+          if (res.data.ok) {
+            setName(res.data.user.name);
+            console.log(name);
+          } else {
+            setName(res.data.error.message);
+          }
+        })
+        .catch(function (error) {
+          console.log("err : ", error);
+        });
+    }
+    getMyInfo();
+  }, []);
   return (
     <>
       <IndexNavbar fixed />
@@ -18,7 +44,8 @@ export default function Index() {
           <div className="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
             <div className="pt-32 sm:pt-0">
               <h2 className="font-semibold text-4xl text-blueGray-600">
-                MBTI others - 타인이 본 나의 mbti
+                MBTI others - 타인이 본 나의 mbti<br></br>
+                {name !== "" ? name : "disconnect"}
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-blueGray-500">
                 MBTI others is Free and Open Source.{" "}

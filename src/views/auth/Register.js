@@ -1,28 +1,12 @@
-import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { FormError } from "../../components/formError";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-const CREATEACCOUNT_MUTATION = gql`
-  mutation createAccountMutation($createAccountInput: CreateAccountInput!) {
-    createAccount(input: $createAccountInput) {
-      ok
-      error
-    }
-  }
-`;
+import axios from "axios";
 
 export default function Register({ history }) {
   const formSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
-    email: Yup.string()
-      .required("Email is required")
-      .matches(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        "Please enter a valid email"
-      ),
     password: Yup.string()
       .required("Password is mendatory")
       .min(3, "Password must be at 3 char long"),
@@ -42,38 +26,22 @@ export default function Register({ history }) {
     mode: "onChange",
     resolver: yupResolver(formSchema),
   });
-  const onCompleted = (data) => {
-    const {
-      createAccount: { ok },
-    } = data;
-    if (ok) {
-      alert("Log in now!");
-      history.push("/auth/login");
-    } else console.log(ok);
-  };
-  const [
-    createAccountMutation,
-    { data: createAccountMutationResult, loading },
-  ] = useMutation(CREATEACCOUNT_MUTATION, {
-    onCompleted,
-  });
 
-  const onSubmit = () => {
-    if (!loading) {
-      const { name, email, password, gender } = getValues();
-      const intGender = +gender;
-      createAccountMutation({
-        variables: {
-          createAccountInput: {
-            name,
-            email,
-            password,
-            gender: intGender,
-          },
-        },
+  async function onSubmit() {
+    const { name, password } = getValues();
+    const data = await axios
+      .post("user/register", { name, password })
+      .then(function (res) {
+        console.log(res);
+        return res;
+      })
+      .catch(function (error) {
+        console.log("err : ", error);
+      })
+      .then(function () {
+        history.push("/");
       });
-    }
-  };
+  }
 
   return (
     <>
@@ -107,27 +75,6 @@ export default function Register({ history }) {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Name"
                     />
-                    {errors.name?.message && (
-                      <FormError errorMessage={errors.name?.message} />
-                    )}
-                  </div>
-
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      Email
-                    </label>
-                    <input
-                      {...register("email")}
-                      type="email"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Email"
-                    />
-                    {errors.email?.message && (
-                      <FormError errorMessage={errors.email?.message} />
-                    )}
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -144,9 +91,6 @@ export default function Register({ history }) {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
                     />
-                    {errors.password?.message && (
-                      <FormError errorMessage={errors.password?.message} />
-                    )}
                   </div>
                   <div className="relative w-full mb-3">
                     <label
@@ -161,11 +105,6 @@ export default function Register({ history }) {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Check your Password"
                     />
-                    {errors.confirmPassword?.message && (
-                      <FormError
-                        errorMessage={errors.confirmPassword?.message}
-                      />
-                    )}
                   </div>
 
                   <div className="mb-8">
@@ -195,9 +134,6 @@ export default function Register({ history }) {
                           Female
                         </label>
                       </span>
-                      {errors.gender?.message && (
-                        <FormError errorMessage={errors.gender?.message} />
-                      )}
                     </label>
                   </div>
                   <div>
@@ -225,15 +161,8 @@ export default function Register({ history }) {
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="submit"
                     >
-                      {loading ? "Loading~~~" : "Create Account"}
+                      Create Account
                     </button>
-                    {createAccountMutationResult?.createAccount.error && (
-                      <FormError
-                        errorMessage={
-                          createAccountMutationResult.createAccount.error
-                        }
-                      />
-                    )}
                   </div>
                 </form>
               </div>
