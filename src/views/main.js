@@ -4,9 +4,7 @@ import { Link } from "react-router-dom";
 
 import IndexNavbar from "../components/Navbars/IndexNavbar";
 import Footer from "../components/Footers/Footer";
-import { get } from "react-hook-form";
-import axios from "axios";
-import { getCookie } from "../utils/cookie";
+import { instance } from "../lib/interceptors";
 
 export default function Index() {
   const [name, setName] = useState("");
@@ -17,10 +15,10 @@ export default function Index() {
 
   useEffect(() => {
     async function getMyInfo() {
-      const accessToken = getCookie("access_token");
-      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-      await axios
-        .get("user")
+      // const accessToken = getCookie("access_token");
+      // axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      await instance
+        .get("api/user")
         .then(function (res) {
           console.log(res);
           if (res.data.ok) {

@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
+import { instance } from "../../lib/interceptors";
 
 export default function Register({ history }) {
   const formSchema = Yup.object().shape({
@@ -29,8 +29,8 @@ export default function Register({ history }) {
 
   async function onSubmit() {
     const { name, password } = getValues();
-    const data = await axios
-      .post("user/register", { name, password })
+    const data = await instance
+      .post("api/user/register", { name, password })
       .then(function (res) {
         console.log(res);
         return res;

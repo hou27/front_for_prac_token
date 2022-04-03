@@ -1,10 +1,8 @@
-import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { FormError } from "../../components/formError";
-import { LOCALSTORAGE_TESTPAGEID, LOCALSTORAGE_TOKEN } from "../../localKey";
+import { instance } from "../../lib/interceptors";
 import { setCookie } from "../../utils/cookie";
 
 export default function Login({ userId }) {
@@ -21,25 +19,24 @@ export default function Login({ userId }) {
 
   async function onSubmit() {
     const { name, password } = getValues();
-    await axios
-      .post("user/login", { name, password })
+    await instance
+      .post("api/user/login", { name, password })
       .then(function (res) {
         console.log(res);
-        setCookie(
-          "access_token",
-          res.data.access_token /*, { httpOnly: true }*/
-        );
+        const { access_token, refresh_token } = res.data;
+        setCookie("access_token", access_token, {
+          path: "http://localhost:3000/" /*httpOnly: true */,
+        });
+        setCookie("refresh_token", refresh_token, {
+          path: "http://localhost:3000/" /*httpOnly: true */,
+        });
       })
       .catch(function (error) {
         console.log("err : ", error);
       })
       .then(function () {
-        history.push("/");
+        // history.push("/");
       });
-  }
-
-  if (userId) {
-    localStorage.setItem(LOCALSTORAGE_TESTPAGEID, userId);
   }
 
   return (
