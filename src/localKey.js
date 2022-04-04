@@ -1,3 +1,3 @@
-export const LOCALSTORAGE_TOKEN = "mbti-token";
-export const REFRESH_TOKEN = "refresh-token";
+export const ACCESS_TOKEN = "access_token";
+export const REFRESH_TOKEN = "refresh_token";
 export const LOCALSTORAGE_TESTPAGEID = "test-page-id";

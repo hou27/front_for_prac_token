@@ -25,7 +25,9 @@ export default function Login({ userId }) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
         setCookie("access_token", access_token, {
-          path: "http://localhost:3000/" /*httpOnly: true */,
+          path: "/",
+          secure: true,
+          sameSite: "none" /*httpOnly: true */,
         });
         setCookie("refresh_token", refresh_token, {
           path: "http://localhost:3000/" /*httpOnly: true */,
@@ -35,7 +37,7 @@ export default function Login({ userId }) {
         console.log("err : ", error);
       })
       .then(function () {
-        // history.push("/");
+        history.push("/");
       });
   }
 

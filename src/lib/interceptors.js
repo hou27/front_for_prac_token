@@ -21,7 +21,7 @@ instance.interceptors.request.use(
     return config;
   },
   (error) => {
-    // 요청 에러 직전 호출됩니다.
+    // 요청 에러 직전 호출
     return Promise.reject(error);
   }
 );
@@ -51,24 +51,24 @@ instance.interceptors.response.use(
       if (preRefreshToken) {
         // refresh token을 이용하여 access token 재발행 받기
         return axios
-          .post("api/token", {
+          .post("api/user/token", {
             refresh_token: preRefreshToken,
           })
           .then((res) => {
             const { access_token, refresh_token } = res.data;
             // 새로 받은 token들 저장
             setCookie("access_token", access_token, {
-              path: "http://localhost:3000/" /*httpOnly: true */,
+              path: "/" /*httpOnly: true */,
             });
             setCookie("refresh_token", refresh_token, {
-              path: "http://localhost:3000/" /*httpOnly: true */,
+              path: "/" /*httpOnly: true */,
             });
 
             originalRequest.headers.authorization = `Bearer ${access_token}`;
             return axios(originalRequest);
           })
           .catch((e) => {
-            console.log(e);
+            console.log("here....", e);
             // token 재발행 실패 시 logout
             removeCookie("access_token");
             removeCookie("refresh_token");

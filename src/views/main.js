@@ -15,8 +15,6 @@ export default function Index() {
 
   useEffect(() => {
     async function getMyInfo() {
-      // const accessToken = getCookie("access_token");
-      // axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       await instance
         .get("api/user")
         .then(function (res) {
