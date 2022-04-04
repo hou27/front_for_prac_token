@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../localKey";
 import { getCookie, removeCookie, setCookie } from "../utils/cookie";
 
 export const instance = axios.create({
@@ -10,12 +11,12 @@ instance.interceptors.request.use(
     console.log("does it works?");
     // HTTP Authorization 요청 헤더에 jwt-token을 넣음
     // 서버측 미들웨어에서 이를 확인하고 검증한 후 해당 API에 요청함.
-    const accessToken = getCookie("access_token");
+    const accessToken = getCookie(ACCESS_TOKEN);
     if (accessToken) {
       console.log(accessToken);
       config.headers.common["Authorization"] = `Bearer ${accessToken}`;
     }
-
+    console.log(accessToken);
     return config;
   },
   (error) => {
@@ -30,55 +31,71 @@ instance.interceptors.response.use(
     return res;
   },
   (error) => {
-    console.log(error.response);
+    console.log("Error !!!");
+    console.dir(error);
     // res에서 error가 발생했을 경우 catch로 넘어가기 전에 처리
-    let errResponseStatus = null;
+    let errResponseStatus = null,
+      errResponseData = null;
     const originalRequest = error.config;
 
     try {
       errResponseStatus = error.response.status;
-    } catch (e) {}
+      errResponseData = error.response.data;
 
-    // access token이 만료되어 발생하는 에러인 경우
-    if (
-      (error.message === "Network Error" || errResponseStatus === 401) &&
-      !originalRequest.retry
-    ) {
-      originalRequest.retry = true;
-      const preRefreshToken = getCookie("refresh_token");
-      if (preRefreshToken) {
-        // refresh token을 이용하여 access token 재발행 받기
-        return axios
-          .post("api/user/token", {
-            refresh_token: preRefreshToken,
-          })
-          .then((res) => {
-            const { access_token, refresh_token } = res.data;
-            // 새로 받은 token들 저장
-            setCookie("access_token", access_token, {
-              path: "/" /*httpOnly: true */,
-            });
-            setCookie("refresh_token", refresh_token, {
-              path: "/" /*httpOnly: true */,
-            });
+      // access token이 만료되어 발생하는 에러인 경우
+      if (
+        (errResponseData.error?.message === "jwt expired" ||
+          errResponseStatus === 401) &&
+        !originalRequest.retry
+      ) {
+        originalRequest.retry = true;
+        const preRefreshToken = getCookie(REFRESH_TOKEN);
+        const preAccessToken = getCookie(ACCESS_TOKEN);
+        console.log("pre access :: ", preAccessToken);
+        if (preRefreshToken) {
+          console.log("pre refresh token ::: ", preRefreshToken);
+          // refresh token을 이용하여 access token 재발행 받기
+          async function regenerateToken() {
+            return await axios
+              .post("api/user/token", {
+                refresh_token: preRefreshToken,
+              })
+              .then(async (res) => {
+                const { access_token, refresh_token } = res.data;
+                // 새로 받은 token들 저장
+                setCookie(ACCESS_TOKEN, access_token, {
+                  path: "/" /*httpOnly: true */,
+                });
+                setCookie(REFRESH_TOKEN, refresh_token, {
+                  path: "/" /*httpOnly: true */,
+                });
+                console.log(access_token);
 
-            originalRequest.headers.authorization = `Bearer ${access_token}`;
-            return axios(originalRequest);
-          })
-          .catch((e) => {
-            console.log("here....", e);
-            // token 재발행 실패 시 logout
-            removeCookie("access_token");
-            removeCookie("refresh_token");
-            window.location.href = "/";
+                originalRequest.headers.Authorization = `Bearer ${access_token}`;
+                await axios(originalRequest);
+                return true;
+              })
+              .catch((e) => {
+                console.log("재발행 실패 :: ");
+                console.dir(e);
+                // token 재발행 실패 시 logout
+                removeCookie(ACCESS_TOKEN);
+                // removeCookie(REFRESH_TOKEN);
+                window.location.href = "/";
 
-            return false;
-          });
+                // return false;
+                return new Error(e);
+              });
+          }
+          regenerateToken();
+        } else {
+          throw new Error("There is no refresh token");
+        }
       }
+    } catch (e) {
+      console.log("here...!!!", e);
       // 오류 발생 시 오류 내용 출력 후 요청 거절
-      return Promise.reject(error);
+      return Promise.reject(e);
     }
-    // 오류 발생 시 오류 내용 출력 후 요청 거절
-    return Promise.reject(error);
   }
 );

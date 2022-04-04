@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { instance } from "../../lib/interceptors";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../localKey";
 import { setCookie } from "../../utils/cookie";
 
 export default function Login({ userId }) {
@@ -24,14 +25,17 @@ export default function Login({ userId }) {
       .then(function (res) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
-        setCookie("access_token", access_token, {
+        setCookie(ACCESS_TOKEN, access_token, {
           path: "/",
-          secure: true,
-          sameSite: "none" /*httpOnly: true */,
+          // secure: true,
+          // sameSite: "none", httpOnly: true,
         });
-        setCookie("refresh_token", refresh_token, {
+        setCookie(REFRESH_TOKEN, refresh_token, {
           path: "/" /*httpOnly: true */,
         });
+        instance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${access_token}`;
       })
       .catch(function (error) {
         console.log("err : ", error);

@@ -18,8 +18,7 @@ export default function Index() {
       await instance
         .get("api/user")
         .then(function (res) {
-          console.log(res);
-          if (res.data.ok) {
+          if (res.data?.ok) {
             setName(res.data.user.name);
             console.log(name);
           } else {
