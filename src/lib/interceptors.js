@@ -28,26 +28,22 @@ instance.interceptors.response.use(
     return res;
   },
   async (error) => {
-    // res에서 error가 발생했을 경우 catch로 넘어가기 전에 처리
-    let errResponseStatus = null,
-      errResponseData = null;
-    const originalRequest = error.config;
-
+    // response에서 error가 발생했을 경우 catch로 넘어가기 전에 처리
     try {
-      errResponseStatus = error.response.status;
-      errResponseData = error.response.data;
+      const errResponseStatus = error.response.status;
+      const errResponseData = error.response.data;
+      const prevRequest = error.config;
 
       // access token이 만료되어 발생하는 에러인 경우
       if (
         (errResponseData.error?.message === "jwt expired" ||
           errResponseStatus === 401) &&
-        !originalRequest.retry
+        !prevRequest.retry
       ) {
-        originalRequest.retry = true;
+        prevRequest.retry = true;
         const preRefreshToken = getCookie(REFRESH_TOKEN);
-        const preAccessToken = getCookie(ACCESS_TOKEN);
         if (preRefreshToken) {
-          // refresh token을 이용하여 access token 재발행 받기
+          // refresh token을 이용하여 access token 재발급
           async function regenerateToken() {
             return await axios
               .post("api/user/token", {
@@ -63,12 +59,17 @@ instance.interceptors.response.use(
                   path: "/" /*httpOnly: true */,
                 });
 
-                originalRequest.headers.Authorization = `Bearer ${access_token}`;
+                // header 새로운 token으로 재설정
+                prevRequest.headers.Authorization = `Bearer ${access_token}`;
 
-                return await axios(originalRequest);
+                // 실패했던 기존 request 재시도
+                return await axios(prevRequest);
               })
               .catch((e) => {
-                // token 재발행 실패 시 logout
+                /*
+                 token 재발행 또는 기존 요청 재시도 실패 시
+                 기존 token 제거
+                 */
                 removeCookie(ACCESS_TOKEN);
                 removeCookie(REFRESH_TOKEN);
                 window.location.href = "/";
@@ -82,7 +83,6 @@ instance.interceptors.response.use(
         }
       }
     } catch (e) {
-      console.log("here...!!!", e);
       // 오류 내용 출력 후 요청 거절
       return Promise.reject(e);
     }
