@@ -30,7 +30,7 @@ export default function Login({ userId }) {
           sameSite: "none" /*httpOnly: true */,
         });
         setCookie("refresh_token", refresh_token, {
-          path: "http://localhost:3000/" /*httpOnly: true */,
+          path: "/" /*httpOnly: true */,
         });
       })
       .catch(function (error) {
