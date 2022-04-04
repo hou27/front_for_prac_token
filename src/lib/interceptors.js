@@ -8,9 +8,6 @@ export const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    console.log("does it works?");
-    // HTTP Authorization 요청 헤더에 jwt-token을 넣음
-    // 서버측 미들웨어에서 이를 확인하고 검증한 후 해당 API에 요청함.
     const accessToken = getCookie(ACCESS_TOKEN);
     if (accessToken) {
       config.headers.common["Authorization"] = `Bearer ${accessToken}`;
