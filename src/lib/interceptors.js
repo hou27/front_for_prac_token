@@ -13,10 +13,8 @@ instance.interceptors.request.use(
     // 서버측 미들웨어에서 이를 확인하고 검증한 후 해당 API에 요청함.
     const accessToken = getCookie(ACCESS_TOKEN);
     if (accessToken) {
-      console.log(accessToken);
       config.headers.common["Authorization"] = `Bearer ${accessToken}`;
     }
-    console.log(accessToken);
     return config;
   },
   (error) => {
@@ -27,12 +25,9 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (res) => {
-    console.log("res: ", res);
     return res;
   },
-  (error) => {
-    console.log("Error !!!");
-    console.dir(error);
+  async (error) => {
     // res에서 error가 발생했을 경우 catch로 넘어가기 전에 처리
     let errResponseStatus = null,
       errResponseData = null;
@@ -51,9 +46,7 @@ instance.interceptors.response.use(
         originalRequest.retry = true;
         const preRefreshToken = getCookie(REFRESH_TOKEN);
         const preAccessToken = getCookie(ACCESS_TOKEN);
-        console.log("pre access :: ", preAccessToken);
         if (preRefreshToken) {
-          console.log("pre refresh token ::: ", preRefreshToken);
           // refresh token을 이용하여 access token 재발행 받기
           async function regenerateToken() {
             return await axios
@@ -69,32 +62,28 @@ instance.interceptors.response.use(
                 setCookie(REFRESH_TOKEN, refresh_token, {
                   path: "/" /*httpOnly: true */,
                 });
-                console.log(access_token);
 
                 originalRequest.headers.Authorization = `Bearer ${access_token}`;
-                await axios(originalRequest);
-                return true;
+
+                return await axios(originalRequest);
               })
               .catch((e) => {
-                console.log("재발행 실패 :: ");
-                console.dir(e);
                 // token 재발행 실패 시 logout
                 removeCookie(ACCESS_TOKEN);
-                // removeCookie(REFRESH_TOKEN);
+                removeCookie(REFRESH_TOKEN);
                 window.location.href = "/";
 
-                // return false;
                 return new Error(e);
               });
           }
-          regenerateToken();
+          return await regenerateToken();
         } else {
           throw new Error("There is no refresh token");
         }
       }
     } catch (e) {
       console.log("here...!!!", e);
-      // 오류 발생 시 오류 내용 출력 후 요청 거절
+      // 오류 내용 출력 후 요청 거절
       return Promise.reject(e);
     }
   }

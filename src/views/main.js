@@ -20,7 +20,6 @@ export default function Index() {
         .then(function (res) {
           if (res.data?.ok) {
             setName(res.data.user.name);
-            console.log(name);
           } else {
             setName(res.data.error.message);
           }
