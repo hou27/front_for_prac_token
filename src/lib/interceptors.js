@@ -2,23 +2,11 @@ import axios from "axios";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../localKey";
 import { getCookie, removeCookie, setCookie } from "../utils/cookie";
 
+const default_access_token = getCookie(ACCESS_TOKEN);
 export const instance = axios.create({
   baseURL: "http://localhost:4000",
+  headers: { Authorization: `Bearer ${default_access_token}` },
 });
-
-instance.interceptors.request.use(
-  (config) => {
-    const accessToken = getCookie(ACCESS_TOKEN);
-    if (accessToken) {
-      config.headers.common["Authorization"] = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => {
-    // 요청 에러 직전 호출
-    return Promise.reject(error);
-  }
-);
 
 instance.interceptors.response.use(
   (res) => {
@@ -31,6 +19,7 @@ instance.interceptors.response.use(
       const errResponseData = error.response.data;
       const prevRequest = error.config;
 
+      console.dir(error);
       // access token이 만료되어 발생하는 에러인 경우
       if (
         (errResponseData.error?.message === "jwt expired" ||
@@ -69,7 +58,7 @@ instance.interceptors.response.use(
                  */
                 removeCookie(ACCESS_TOKEN);
                 removeCookie(REFRESH_TOKEN);
-                window.location.href = "/";
+                // window.location.href = "/";
 
                 return new Error(e);
               });
