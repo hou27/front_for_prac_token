@@ -27,21 +27,22 @@ export default function Login({ userId }) {
         const { access_token, refresh_token } = res.data;
         setCookie(ACCESS_TOKEN, access_token, {
           path: "/",
-          // secure: true,
-          // sameSite: "none", httpOnly: true,
         });
         setCookie(REFRESH_TOKEN, refresh_token, {
-          path: "/" /*httpOnly: true */,
+          path: "/",
+          secure: true,
+          httpOnly: true,
         });
         instance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${access_token}`;
+        console.log(instance.defaults.headers);
       })
       .catch(function (error) {
         console.log("err : ", error);
       })
       .then(function () {
-        history.push("/");
+        // history.push("/");
       });
   }
 

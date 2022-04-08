@@ -1,18 +1,25 @@
 import axios from "axios";
+import { get } from "react-hook-form";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../localKey";
 import { getCookie, removeCookie, setCookie } from "../utils/cookie";
 
 const default_access_token = getCookie(ACCESS_TOKEN);
 export const instance = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: "https://localhost:4000",
   headers: { Authorization: `Bearer ${default_access_token}` },
 });
+
+// instance.interceptors.request.use((config) => {
+//   console.log(instance.defaults.headers.common["Authorization"]);
+//   return config;
+// });
 
 instance.interceptors.response.use(
   (res) => {
     return res;
   },
   async (error) => {
+    console.log(getCookie("_kdt"));
     // response에서 error가 발생했을 경우 catch로 넘어가기 전에 처리
     try {
       const errResponseStatus = error.response.status;
@@ -39,10 +46,12 @@ instance.interceptors.response.use(
                 const { access_token, refresh_token } = res.data;
                 // 새로 받은 token들 저장
                 setCookie(ACCESS_TOKEN, access_token, {
-                  path: "/" /*httpOnly: true */,
+                  path: "/",
                 });
                 setCookie(REFRESH_TOKEN, refresh_token, {
-                  path: "/" /*httpOnly: true */,
+                  path: "/",
+                  secure: true,
+                  httpOnly: true,
                 });
 
                 // header 새로운 token으로 재설정
