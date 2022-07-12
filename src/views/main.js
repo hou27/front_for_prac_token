@@ -18,7 +18,7 @@ export default function Index() {
         .get("api/user/me")
         .then(function (res) {
           console.log(res);
-          if (res.data?.requestSuccess) {
+          if (res.status === 200) {
             setName(res.data.name);
           } else {
             setName(res.data.error.message);
