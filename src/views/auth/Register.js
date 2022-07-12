@@ -30,7 +30,7 @@ export default function Register({ history }) {
   async function onSubmit() {
     const { name, password } = getValues();
     const data = await instance
-      .post("api/user/register", { name, password })
+      .post("api/auth/register", { name, password })
       .then(function (res) {
         console.log(res);
         return res;

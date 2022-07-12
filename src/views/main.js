@@ -1,6 +1,5 @@
 /*eslint-disable*/
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 
 import IndexNavbar from "../components/Navbars/IndexNavbar";
 import Footer from "../components/Footers/Footer";
@@ -16,10 +15,11 @@ export default function Index() {
   useEffect(() => {
     async function getMyInfo() {
       await instance
-        .get("api/user")
+        .get("api/user/me")
         .then(function (res) {
-          if (res.data?.ok) {
-            setName(res.data.user.name);
+          console.log(res);
+          if (res.data?.requestSuccess) {
+            setName(res.data.name);
           } else {
             setName(res.data.error.message);
           }

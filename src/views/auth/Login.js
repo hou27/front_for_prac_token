@@ -21,7 +21,7 @@ export default function Login({ userId }) {
   async function onSubmit() {
     const { name, password } = getValues();
     await instance
-      .post("api/user/login", { name, password })
+      .post("api/auth/login", { name, password })
       .then(function (res) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
@@ -42,7 +42,7 @@ export default function Login({ userId }) {
         console.log("err : ", error);
       })
       .then(function () {
-        // history.push("/");
+        history.push("/");
       });
   }
 

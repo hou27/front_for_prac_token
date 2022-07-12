@@ -1,11 +1,10 @@
 import axios from "axios";
-import { get } from "react-hook-form";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../localKey";
 import { getCookie, removeCookie, setCookie } from "../utils/cookie";
 
 const default_access_token = getCookie(ACCESS_TOKEN);
 export const instance = axios.create({
-  baseURL: "https://localhost:4000",
+  baseURL: "http://localhost:4000",
   headers: { Authorization: `Bearer ${default_access_token}` },
 });
 
@@ -19,9 +18,9 @@ instance.interceptors.response.use(
     return res;
   },
   async (error) => {
-    console.log(getCookie("_kdt"));
     // response에서 error가 발생했을 경우 catch로 넘어가기 전에 처리
     try {
+      console.dir(error);
       const errResponseStatus = error.response.status;
       const errResponseData = error.response.data;
       const prevRequest = error.config;
@@ -39,7 +38,7 @@ instance.interceptors.response.use(
           // refresh token을 이용하여 access token 재발급
           async function regenerateToken() {
             return await axios
-              .post("api/user/token", {
+              .post("api/auth/token", {
                 refresh_token: preRefreshToken,
               })
               .then(async (res) => {
