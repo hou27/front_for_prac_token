@@ -19,9 +19,9 @@ export default function Login({ userId }) {
   });
 
   async function onSubmit() {
-    const { name, password } = getValues();
+    const { email, password } = getValues();
     await instance
-      .post("api/auth/login", { name, password })
+      .post("api/auth/login", { email, password })
       .then(function (res) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
@@ -62,16 +62,16 @@ export default function Login({ userId }) {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="grid-password"
                     >
-                      Name
+                      Email
                     </label>
                     <input
-                      {...register("name", {
-                        required: "Name is required",
+                      {...register("email", {
+                        required: "Email is required",
                       })}
                       required
                       type="text"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Name"
+                      placeholder="Email"
                     />
                   </div>
 

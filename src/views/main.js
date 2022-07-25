@@ -15,7 +15,7 @@ export default function Index() {
   useEffect(() => {
     async function getMyInfo() {
       await instance
-        .get("api/user/me")
+        .get("api/users/me")
         .then(function (res) {
           console.log(res);
           if (res.status === 200) {

@@ -4,7 +4,7 @@ import { getCookie, removeCookie, setCookie } from "../utils/cookie";
 
 const default_access_token = getCookie(ACCESS_TOKEN);
 export const instance = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: "https://bookmark-test-server-hou27.herokuapp.com/",
   headers: { Authorization: `Bearer ${default_access_token}` },
 });
 

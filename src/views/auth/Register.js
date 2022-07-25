@@ -6,6 +6,7 @@ import { instance } from "../../lib/interceptors";
 
 export default function Register({ history }) {
   const formSchema = Yup.object().shape({
+    email: Yup.string().required("Email is required"),
     name: Yup.string().required("Name is required"),
     password: Yup.string()
       .required("Password is mendatory")
@@ -13,9 +14,6 @@ export default function Register({ history }) {
     confirmPassword: Yup.string()
       .required("Please type your password one more time.")
       .oneOf([Yup.ref("password")], "Passwords does not match"),
-    gender: Yup.number()
-      .required("Selecting the gender field is required")
-      .oneOf([0, 1], "Must be one of 0, 1"),
   });
   const {
     register,
@@ -28,9 +26,9 @@ export default function Register({ history }) {
   });
 
   async function onSubmit() {
-    const { name, password } = getValues();
+    const { email, name, password } = getValues();
     const data = await instance
-      .post("api/auth/register", { name, password })
+      .post("api/auth/register", { email, name, password })
       .then(function (res) {
         console.log(res);
         return res;
@@ -62,6 +60,21 @@ export default function Register({ history }) {
                   <small>MBTI Others</small>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="relative w-full mb-3">
+                    <label
+                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password"
+                    >
+                      Email
+                    </label>
+                    <input
+                      {...register("email")}
+                      type="text"
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      placeholder="Email"
+                    />
+                  </div>
+
                   <div className="relative w-full mb-3">
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
