@@ -58,7 +58,7 @@ export default function Reset({ match }) {
     } else if (password && confirmPassword) {
       console.log(password);
       await instance
-        .post("api/auth/reset-password", { code, password })
+        .post("api/users/reset-password", { code, password })
         .then(function (res) {
           console.log(res);
         })
