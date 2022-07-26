@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { instance } from "../../lib/interceptors";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../localKey";
-import { setCookie } from "../../utils/cookie";
+import { getCookie, setCookie } from "../../utils/cookie";
 
 export default function Login({ userId }) {
   const history = useHistory();
@@ -30,8 +30,8 @@ export default function Login({ userId }) {
         });
         setCookie(REFRESH_TOKEN, refresh_token, {
           path: "/",
-          secure: true,
-          httpOnly: true,
+          // secure: true,
+          // httpOnly: true,
         });
         instance.defaults.headers.common[
           "Authorization"
