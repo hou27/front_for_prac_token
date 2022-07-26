@@ -34,6 +34,7 @@ instance.interceptors.response.use(
       ) {
         prevRequest.retry = true;
         const preRefreshToken = getCookie(REFRESH_TOKEN);
+        console.log("prevRefreshToken : ", preRefreshToken);
         if (preRefreshToken) {
           // refresh token을 이용하여 access token 재발급
           async function regenerateToken() {

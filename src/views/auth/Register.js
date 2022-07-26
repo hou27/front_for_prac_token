@@ -119,36 +119,6 @@ export default function Register({ history }) {
                       placeholder="Check your Password"
                     />
                   </div>
-
-                  <div className="mb-8">
-                    <label className="inline-flex items-center cursor-pointer">
-                      <span className="text-sm font-semibold text-blueGray-600">
-                        <input
-                          {...register("gender")}
-                          type="radio"
-                          id="Male"
-                          name="gender"
-                          value="0"
-                          className="form-radio border-0 rounded text-blueGray-700 ml-1 mr-3 w-5 h-5 ease-linear transition-all duration-150"
-                          defaultChecked
-                        />
-                        <label htmlFor="Male" className="mr-3">
-                          Male
-                        </label>
-                        <input
-                          {...register("gender")}
-                          type="radio"
-                          id="Female"
-                          name="gender"
-                          value="1"
-                          className="form-radio border-0 rounded text-blueGray-700 ml-1 mr-3 w-5 h-5 ease-linear transition-all duration-150"
-                        />
-                        <label htmlFor="Female" className="mr-3">
-                          Female
-                        </label>
-                      </span>
-                    </label>
-                  </div>
                   <div>
                     <label className="inline-flex items-center cursor-pointer">
                       <input
