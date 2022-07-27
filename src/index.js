@@ -12,7 +12,7 @@ ReactDOM.render(
   <React.StrictMode>
     <HelmetProvider>
       <Helmet>
-        <title>MBTI others</title>
+        <title>Test Page</title>
       </Helmet>
     </HelmetProvider>
     <App />
