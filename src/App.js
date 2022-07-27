@@ -19,12 +19,12 @@ import FlareLane from "@flarelane/flarelane-web-sdk";
 {
   /* <script src="https://cdn.flarelane.com/WebSDK.js"></script>
 <script>
-    FlareLane.initialize({ projectId: "89dc0207-15e7-49fd-8824-61c7cdde0f47" });
+    FlareLane.initialize({ projectId: "d59b2619-c763-48f6-bf67-f1cdc733be58" });
 </script> */
 }
 
 FlareLane.initialize({
-  projectId: "89dc0207-15e7-49fd-8824-61c7cdde0f47",
+  projectId: "d59b2619-c763-48f6-bf67-f1cdc733be58",
   // 사용중인 별도 이름의 ServiceWorker가 있는 경우 해당 경로
   serviceWorkerPath: "/sw.js",
 });
