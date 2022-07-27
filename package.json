@@ -6,6 +6,7 @@
   "license": "MIT",
   "proxy": "http://localhost:4000/",
   "dependencies": {
+    "@flarelane/flarelane-web-sdk": "^0.1.4",
     "@fortawesome/fontawesome-free": "5.15.3",
     "@hookform/resolvers": "^2.8.8",
     "@popperjs/core": "2.9.1",
