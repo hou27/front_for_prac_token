@@ -26,10 +26,10 @@ export default function Login({ userId }) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
         setCookie(ACCESS_TOKEN, access_token, {
-          path: "/",
+          // path: "/",
         });
         setCookie(REFRESH_TOKEN, refresh_token, {
-          path: "/",
+          // path: "/",
           // secure: true,
           // httpOnly: true,
         });
