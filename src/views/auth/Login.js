@@ -5,10 +5,11 @@ import { Link } from "react-router-dom";
 import { instance } from "../../lib/interceptors";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../localKey";
 import { getCookie, setCookie } from "../../utils/cookie";
+import { Cookies } from "react-cookie";
 
 export default function Login({ userId }) {
   const history = useHistory();
-
+  const cookies = new Cookies();
   const {
     register,
     getValues,
@@ -26,10 +27,15 @@ export default function Login({ userId }) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
         setCookie(ACCESS_TOKEN, access_token, {
-          // path: "/",
+          domain: "localhost",
+          // domain: "https://frontfortesthou27.netlify.app/",
         });
+        // cookies.set(ACCESS_TOKEN, access_token, {
+        //   domain: "https://frontfortesthou27.netlify.app/",
+        // });
         setCookie(REFRESH_TOKEN, refresh_token, {
-          // path: "/",
+          domain: "localhost",
+          // domain: "https://frontfortesthou27.netlify.app/",
           // secure: true,
           // httpOnly: true,
         });
@@ -42,7 +48,7 @@ export default function Login({ userId }) {
         console.log("err : ", error);
       })
       .then(function () {
-        history.push("/");
+        // history.push("/");
       });
   }
 

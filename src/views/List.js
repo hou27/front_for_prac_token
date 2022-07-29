@@ -5,12 +5,15 @@ import Navbar from "../components/Navbars/AuthNavbar";
 import { instance } from "../lib/interceptors";
 
 export default function List({ history }) {
+  const [list, setList] = React.useState([]);
+
   useEffect(() => {
     async function getMyList() {
       await instance
         .get("/api/users/load-contents")
         .then((res) => {
           console.log(res.data);
+          setList(res.data.contents);
         })
         .catch((err) => {
           console.log(err);
@@ -21,7 +24,8 @@ export default function List({ history }) {
     }
     getMyList();
   }, []);
-
+  console.log(list.length);
+  list.forEach((content, index) => console.log(content, index));
   return (
     <>
       <Navbar transparent />
@@ -63,144 +67,36 @@ export default function List({ history }) {
           <div className="container mx-auto px-4">
             <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
               <div className="px-6">
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-                    {/* <img
-                      alt="..."
-                      src={
-                        userInfo
-                          ? userInfo.profileImg
-                            ? userInfo.profileImg
-                            : require("assets/img/user.png").default
-                          : require("assets/img/user.png").default
-                      }
-                      className="shadow-xl object-cover h-150-px rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 w-150-px"
-                    /> */}
-                  </div>
-                  <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-                    {/* <div className="py-6 px-3 mt-32 sm:mt-0">
-                      <Link
-                        to={
-                          !meLoading && !userLoading
-                            ? meInfo?.email === userInfo?.email
-                              ? "/admin/editprofile"
-                              : {
-                                  pathname: `/research/${userId}`,
-                                }
-                            : "#"
-                        }
-                      >
-                        <button
-                          className="bg-lightBlue-500 active:bg-lightBlue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
-                          type="button"
-                        >
-                          {!meLoading && !userLoading
-                            ? meInfo?.email === userInfo?.email
-                              ? "프로필 편집"
-                              : "검사하기"
-                            : "Loading..."}
-                        </button>
-                      </Link>
-                      {!meLoading && !userLoading ? (
-                        meInfo?.email === userInfo?.email ? (
-                          <button
-                            id="kakao-link-btn"
-                            className="bg-lightBlue-500 active:bg-lightBlue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
-                            type="button"
-                            onClick={onShareKakaoClick}
-                          >
-                            share
-                          </button>
-                        ) : null
-                      ) : null}
-                    </div> */}
-                  </div>
-                  {/* <div className="w-full lg:w-4/12 px-4 lg:order-1">
-                    <div className="flex justify-center py-4 lg:pt-4 pt-8">
-                      <div className="mr-4 p-3 text-center">
-                        <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                          {!meLoading && !userLoading
-                            ? myResult.length
-                            : "Loading..."}
-                        </span>
-                        <span className="text-sm text-blueGray-400">
-                          Researchers
-                        </span>
-                      </div>
-                      <div className="mr-4 p-3 text-center">
-                        <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                          {!meLoading && !userLoading
-                            ? variety.size
-                            : "Loading..."}
-                        </span>
-                        <span className="text-sm text-blueGray-400">
-                          MBTI variety
-                        </span>
-                      </div>
-                      <div className="lg:mr-4 p-3 text-center">
-                        <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                          {!meLoading && !userLoading
-                            ? userList.length
-                            : "Loading..."}
-                        </span>
-                        <span className="text-sm text-blueGray-400">
-                          My List
-                        </span>
-                      </div>
-                    </div>
-                  </div> */}
-                </div>
-                {/* {!userLoading ? (
-                  <>
+                {list.length > 0 ? (
+                  /*show list*/
+                  list.map((content, _) => (
                     <div className="text-center mt-12">
                       <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
-                        {userInfo?.name ? userInfo.name : "No Info"}
+                        {content?.title ? content.title : "No Title"}
                       </h3>
                       <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
                         <i className="fas fa-solid fa-cake-candles mr-2 text-lg text-blueGray-400"></i>{" "}
-                        {userInfo?.birth ? userInfo.birth : "enter your birth"}
+                        {content.link}
                       </div>
-                      <div className="mb-2 text-blueGray-600 mt-10">
-                        <i className="fas fa-solid fa-quote-right mr-2 text-lg text-blueGray-400"></i>
-                        The highest percentage of MBTI is...
-                      </div>
-                      <h4 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
-                        {sortedMbti.length === 0 ? "Not yet" : sortedMbti[0][0]}
-                      </h4>
                       <br />
-
                       <div className="mb-2 text-blueGray-600">
                         <i className="fas fa-regular fa-envelope-open mr-2 text-lg text-blueGray-400"></i>
-                        {userInfo?.email ? userInfo?.email : "No Info"}
+                        {content?.category
+                          ? content.category.name
+                          : "No Category"}
                       </div>
                     </div>
-                  </>
+                  ))
                 ) : (
                   <div className="text-center mt-12">
                     <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
                       "No Info"
                     </h3>
                   </div>
-                )} */}
+                )}
                 <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
                   <div className="flex flex-wrap justify-center">
                     <div className="w-full lg:w-9/12 px-4">
-                      {/* <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                        {!userLoading ? (
-                          userInfo?.bio ? (
-                            userInfo?.bio
-                          ) : (
-                            <p>
-                              enter your bio
-                              <br />
-                              ex) Info like your MBTI or some links like your
-                              SNS.
-                            </p>
-                          )
-                        ) : (
-                          "No Info"
-                        )}
-                      </p> */}
                       <a
                         href="#pablo"
                         className="font-normal text-lightBlue-500"

@@ -38,7 +38,7 @@ instance.interceptors.response.use(
         if (preRefreshToken) {
           // refresh token을 이용하여 access token 재발급
           async function regenerateToken() {
-            return await axios
+            return await instance
               .post("api/auth/reissue", {
                 refresh_token: preRefreshToken,
               })
