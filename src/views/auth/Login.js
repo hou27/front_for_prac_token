@@ -25,8 +25,24 @@ export default function Login() {
       .then(function (res) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
+        console.log(
+          "access_token prev setItem",
+          localStorage.getItem(ACCESS_TOKEN)
+        );
+        console.log(
+          "refresh_token prev setItem",
+          localStorage.getItem(REFRESH_TOKEN)
+        );
         localStorage.setItem(ACCESS_TOKEN, access_token);
         localStorage.setItem(REFRESH_TOKEN, refresh_token);
+        console.log(
+          "access_token after setItem",
+          localStorage.getItem(ACCESS_TOKEN)
+        );
+        console.log(
+          "refresh_token after setItem",
+          localStorage.getItem(REFRESH_TOKEN)
+        );
         instance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${access_token}`;

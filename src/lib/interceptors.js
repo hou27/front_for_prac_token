@@ -11,6 +11,8 @@ export const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
+  console.log("access_token in pre req", localStorage.getItem(ACCESS_TOKEN));
+  console.log("refresh_token in pre req", localStorage.getItem(REFRESH_TOKEN));
   console.log(instance.defaults.headers.common["Authorization"]);
   return config;
 });
