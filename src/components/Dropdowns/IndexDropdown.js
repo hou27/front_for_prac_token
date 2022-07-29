@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { createPopper } from "@popperjs/core";
+import { instance } from "../../lib/interceptors";
 
 const IndexDropdown = () => {
   // dropdown props
@@ -16,6 +17,28 @@ const IndexDropdown = () => {
   const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
   };
+
+  const [id, setId] = useState(undefined);
+
+  useEffect(() => {
+    async function getMyInfo() {
+      await instance
+        .get("api/users/me")
+        .then(function (res) {
+          console.log(res);
+          if (res.status === 200) {
+            setId(res.data.id);
+          } else {
+            console.log(res.data.error.message);
+          }
+        })
+        .catch(function (error) {
+          console.log("err : ", error);
+        });
+    }
+    getMyInfo();
+  }, []);
+
   return (
     <>
       <a
@@ -47,6 +70,48 @@ const IndexDropdown = () => {
           "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
         }
       >
+        {id ? (
+          <>
+            <span
+              className={
+                "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
+              }
+            >
+              Admin
+            </span>
+            <Link
+              to={id ? `/profile/${id}` : "/auth/login"}
+              className={
+                "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+              }
+            >
+              Profile
+            </Link>
+          </>
+        ) : (
+          <>
+            <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" />
+            <span
+              className={
+                "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
+              }
+            >
+              Auth
+            </span>
+            <Link
+              to="/auth/login"
+              className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            >
+              Login
+            </Link>
+            <Link
+              to="/auth/register"
+              className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            >
+              Register
+            </Link>
+          </>
+        )}
         <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" />
         <span
           className={

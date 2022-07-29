@@ -15,13 +15,7 @@ import Index from "./views/main";
 // FlareLane initialization
 
 import FlareLane from "@flarelane/flarelane-web-sdk";
-
-{
-  /* <script src="https://cdn.flarelane.com/WebSDK.js"></script>
-<script>
-    FlareLane.initialize({ projectId: "d59b2619-c763-48f6-bf67-f1cdc733be58" });
-</script> */
-}
+import List from "./views/List";
 
 FlareLane.initialize({
   projectId: "d59b2619-c763-48f6-bf67-f1cdc733be58",
@@ -36,6 +30,7 @@ export default function App() {
         {/* add routes with layouts */}
         <Route path="/auth" component={Auth} />
         {/* add routes without layouts */}
+        <Route path="/mylist" exact component={List} />
         <Route path="/" exact component={Index} />
         {/* add redirect for first page */}
         <Redirect from="*" to="/" />
