@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import IndexNavbar from "../components/Navbars/IndexNavbar";
 import Footer from "../components/Footers/Footer";
 import { instance } from "../lib/interceptors";
-import { ACCESS_TOKEN } from "../localKey";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../localKey";
 
 export default function Index() {
   const [name, setName] = useState("");
@@ -40,8 +40,12 @@ export default function Index() {
             <div className="pt-32 sm:pt-0">
               <h2 className="font-semibold text-4xl text-blueGray-600">
                 임시 세션 슬라이싱 테스트용 페이지<br></br>현재 사용자 :
-                {name !== "" ? name : localStorage.getItem(ACCESS_TOKEN)}
+                {name !== "" ? name : "disconnect"}
               </h2>
+              <br></br>
+              <p>access token : {localStorage.getItem(ACCESS_TOKEN)}</p>
+              <br></br>
+              <p>refresh token : {localStorage.getItem(REFRESH_TOKEN)}</p>
             </div>
           </div>
         </div>
