@@ -4,6 +4,7 @@ import { getCookie, removeCookie, setCookie } from "../utils/cookie";
 
 // const default_access_token = getCookie(ACCESS_TOKEN);
 const default_access_token = localStorage.getItem(ACCESS_TOKEN);
+console.log(default_access_token);
 export const instance = axios.create({
   baseURL: "https://bookmark-test-server-hou27.herokuapp.com/",
   headers: { Authorization: `Bearer ${default_access_token}` },

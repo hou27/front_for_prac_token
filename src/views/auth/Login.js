@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { instance } from "../../lib/interceptors";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../localKey";
 
-export default function Login({ userId }) {
+export default function Login() {
   const history = useHistory();
   const {
     register,
@@ -18,8 +18,8 @@ export default function Login({ userId }) {
 
   async function onSubmit() {
     const { email, password } = getValues();
-    const domain = window.location.hostname;
-    console.log(domain);
+    // const domain = window.location.hostname;
+    // console.log(domain);
     await instance
       .post("api/auth/login", { email, password })
       .then(function (res) {
@@ -30,12 +30,13 @@ export default function Login({ userId }) {
         instance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${access_token}`;
+        console.log(instance.defaults.headers.common["Authorization"]);
       })
       .catch(function (error) {
         console.log("err : ", error);
       })
       .then(function () {
-        // history.push("/");
+        history.push("/");
       });
   }
 
