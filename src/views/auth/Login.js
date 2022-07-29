@@ -26,13 +26,13 @@ export default function Login({ userId }) {
       .then(function (res) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
-        setCookie(ACCESS_TOKEN, access_token, {
-          // domain: "localhost",
-          domain: "https://frontfortesthou27.netlify.app/",
-        });
-        // cookies.set(ACCESS_TOKEN, access_token, {
+        // setCookie(ACCESS_TOKEN, access_token, {
+        //   // domain: "localhost",
         //   domain: "https://frontfortesthou27.netlify.app/",
         // });
+        cookies.set(ACCESS_TOKEN, access_token, {
+          domain: "https://frontfortesthou27.netlify.app/",
+        });
         setCookie(REFRESH_TOKEN, refresh_token, {
           // domain: "localhost",
           domain: "https://frontfortesthou27.netlify.app/",
