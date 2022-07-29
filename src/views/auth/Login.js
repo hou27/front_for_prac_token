@@ -35,6 +35,8 @@ export default function Login({ userId }) {
         cookies.set(ACCESS_TOKEN, access_token, {
           domain,
           sameSite: "none",
+          secure: true,
+          httpOnly: true,
         });
         setCookie(REFRESH_TOKEN, refresh_token, {
           // domain: "localhost",
