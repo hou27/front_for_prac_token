@@ -21,6 +21,7 @@ export default function Login({ userId }) {
 
   async function onSubmit() {
     const { email, password } = getValues();
+    const domain = window.location.hostname;
     await instance
       .post("api/auth/login", { email, password })
       .then(function (res) {
@@ -31,11 +32,11 @@ export default function Login({ userId }) {
         //   domain: "https://frontfortesthou27.netlify.app/",
         // });
         cookies.set(ACCESS_TOKEN, access_token, {
-          domain: "https://frontfortesthou27.netlify.app/",
+          domain,
         });
         setCookie(REFRESH_TOKEN, refresh_token, {
           // domain: "localhost",
-          domain: "https://frontfortesthou27.netlify.app/",
+          domain,
           // secure: true,
           // httpOnly: true,
         });
