@@ -33,7 +33,7 @@ export default function Login({ userId }) {
         //   domain: "https://frontfortesthou27.netlify.app/",
         // });
         cookies.set(ACCESS_TOKEN, access_token, {
-          domain,
+          path: "/",
           sameSite: "none",
           secure: true,
           httpOnly: true,
