@@ -27,15 +27,15 @@ export default function Login({ userId }) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
         setCookie(ACCESS_TOKEN, access_token, {
-          domain: "localhost",
-          // domain: "https://frontfortesthou27.netlify.app/",
+          // domain: "localhost",
+          domain: "https://frontfortesthou27.netlify.app/",
         });
         // cookies.set(ACCESS_TOKEN, access_token, {
         //   domain: "https://frontfortesthou27.netlify.app/",
         // });
         setCookie(REFRESH_TOKEN, refresh_token, {
-          domain: "localhost",
-          // domain: "https://frontfortesthou27.netlify.app/",
+          // domain: "localhost",
+          domain: "https://frontfortesthou27.netlify.app/",
           // secure: true,
           // httpOnly: true,
         });
@@ -43,6 +43,7 @@ export default function Login({ userId }) {
           "Authorization"
         ] = `Bearer ${access_token}`;
         console.log(instance.defaults.headers);
+        console.log(getCookie(ACCESS_TOKEN), getCookie(REFRESH_TOKEN));
       })
       .catch(function (error) {
         console.log("err : ", error);
