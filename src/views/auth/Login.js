@@ -22,6 +22,7 @@ export default function Login({ userId }) {
   async function onSubmit() {
     const { email, password } = getValues();
     const domain = window.location.hostname;
+    console.log(domain);
     await instance
       .post("api/auth/login", { email, password })
       .then(function (res) {
@@ -33,10 +34,12 @@ export default function Login({ userId }) {
         // });
         cookies.set(ACCESS_TOKEN, access_token, {
           domain,
+          sameSite: "none",
         });
         setCookie(REFRESH_TOKEN, refresh_token, {
           // domain: "localhost",
           domain,
+          sameSite: "none",
           // secure: true,
           // httpOnly: true,
         });
