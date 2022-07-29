@@ -10,10 +10,10 @@ export const instance = axios.create({
   headers: { Authorization: `Bearer ${default_access_token}` },
 });
 
-// instance.interceptors.request.use((config) => {
-//   console.log(instance.defaults.headers.common["Authorization"]);
-//   return config;
-// });
+instance.interceptors.request.use((config) => {
+  console.log(instance.defaults.headers.common["Authorization"]);
+  return config;
+});
 
 instance.interceptors.response.use(
   (res) => {
