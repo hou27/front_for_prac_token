@@ -2,7 +2,8 @@ import axios from "axios";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../localKey";
 import { getCookie, removeCookie, setCookie } from "../utils/cookie";
 
-const default_access_token = getCookie(ACCESS_TOKEN);
+// const default_access_token = getCookie(ACCESS_TOKEN);
+const default_access_token = localStorage.getItem(ACCESS_TOKEN);
 export const instance = axios.create({
   baseURL: "https://bookmark-test-server-hou27.herokuapp.com/",
   headers: { Authorization: `Bearer ${default_access_token}` },
@@ -33,7 +34,7 @@ instance.interceptors.response.use(
         !prevRequest.retry
       ) {
         prevRequest.retry = true;
-        const preRefreshToken = getCookie(REFRESH_TOKEN);
+        const preRefreshToken = localStorage.getItem(REFRESH_TOKEN); // getCookie(REFRESH_TOKEN);
         console.log("prevRefreshToken : ", preRefreshToken);
         if (preRefreshToken) {
           // refresh token을 이용하여 access token 재발급
@@ -45,14 +46,16 @@ instance.interceptors.response.use(
               .then(async (res) => {
                 const { access_token, refresh_token } = res.data;
                 // 새로 받은 token들 저장
-                setCookie(ACCESS_TOKEN, access_token, {
-                  path: "/",
-                });
-                setCookie(REFRESH_TOKEN, refresh_token, {
-                  path: "/",
-                  secure: true,
-                  httpOnly: true,
-                });
+                // setCookie(ACCESS_TOKEN, access_token, {
+                //   path: "/",
+                // });
+                // setCookie(REFRESH_TOKEN, refresh_token, {
+                //   path: "/",
+                //   secure: true,
+                //   httpOnly: true,
+                // });
+                localStorage.setItem(ACCESS_TOKEN, access_token);
+                localStorage.setItem(REFRESH_TOKEN, refresh_token);
 
                 // header 새로운 token으로 재설정
                 prevRequest.headers.Authorization = `Bearer ${access_token}`;
@@ -65,8 +68,10 @@ instance.interceptors.response.use(
                  token 재발행 또는 기존 요청 재시도 실패 시
                  기존 token 제거
                  */
-                removeCookie(ACCESS_TOKEN);
-                removeCookie(REFRESH_TOKEN);
+                localStorage.removeItem(ACCESS_TOKEN);
+                localStorage.removeItem(REFRESH_TOKEN);
+                // removeCookie(ACCESS_TOKEN);
+                // removeCookie(REFRESH_TOKEN);
                 // window.location.href = "/";
 
                 return new Error(e);

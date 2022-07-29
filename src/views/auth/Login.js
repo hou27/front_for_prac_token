@@ -4,12 +4,9 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { instance } from "../../lib/interceptors";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../localKey";
-import { getCookie, setCookie } from "../../utils/cookie";
-import { Cookies } from "react-cookie";
 
 export default function Login({ userId }) {
   const history = useHistory();
-  const cookies = new Cookies();
   const {
     register,
     getValues,
@@ -28,28 +25,11 @@ export default function Login({ userId }) {
       .then(function (res) {
         console.log(res);
         const { access_token, refresh_token } = res.data;
-        // setCookie(ACCESS_TOKEN, access_token, {
-        //   // domain: "localhost",
-        //   domain: "https://frontfortesthou27.netlify.app/",
-        // });
-        cookies.set(ACCESS_TOKEN, access_token, {
-          path: "/",
-          sameSite: "none",
-          secure: true,
-          httpOnly: true,
-        });
-        setCookie(REFRESH_TOKEN, refresh_token, {
-          // domain: "localhost",
-          domain,
-          sameSite: "none",
-          // secure: true,
-          // httpOnly: true,
-        });
+        localStorage.setItem(ACCESS_TOKEN, access_token);
+        localStorage.setItem(REFRESH_TOKEN, refresh_token);
         instance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${access_token}`;
-        console.log(instance.defaults.headers);
-        console.log(getCookie(ACCESS_TOKEN), getCookie(REFRESH_TOKEN));
       })
       .catch(function (error) {
         console.log("err : ", error);
