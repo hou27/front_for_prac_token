@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
+import CardTable from "../components/Cards/CardTable";
 import Footer from "../components/Footers/Footer";
 import Navbar from "../components/Navbars/AuthNavbar";
 import { instance } from "../lib/interceptors";
@@ -70,22 +71,29 @@ export default function List({ history }) {
                 {list.length > 0 ? (
                   /*show list*/
                   list.map((content, _) => (
-                    <div className="text-center mt-12">
-                      <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
-                        {content?.title ? content.title : "No Title"}
-                      </h3>
-                      <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
-                        <i className="fas fa-solid fa-cake-candles mr-2 text-lg text-blueGray-400"></i>{" "}
-                        {content.link}
-                      </div>
-                      <br />
-                      <div className="mb-2 text-blueGray-600">
-                        <i className="fas fa-regular fa-envelope-open mr-2 text-lg text-blueGray-400"></i>
-                        {content?.category
-                          ? content.category.name
-                          : "No Category"}
-                      </div>
-                    </div>
+                    <>
+                      {/* <div className="text-center mt-12">
+                        <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
+                          {content?.title ? content.title : "No Title"}
+                        </h3>
+                        <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
+                          <i className="fas fa-solid fa-cake-candles mr-2 text-lg text-blueGray-400"></i>{" "}
+                          {content.link}
+                        </div>
+                        <br />
+                        <div className="mb-2 text-blueGray-600">
+                          <i className="fas fa-regular fa-envelope-open mr-2 text-lg text-blueGray-400"></i>
+                          {content?.category
+                            ? content.category.name
+                            : "No Category"}
+                        </div>
+                      </div> */}
+                      <CardTable
+                        title={content?.title}
+                        link={content.link}
+                        category={content?.category?.name}
+                      ></CardTable>
+                    </>
                   ))
                 ) : (
                   <div className="text-center mt-12">
